@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="header">
+  <h1>Dashboard</h1>
+  <p>Управление контентом</p>
+  <button onclick="logout()">Выйти</button>
+</div>
+
+<hr style="margin:20px 0">
+
+<h3>📊 Статистика</h3>
+
+<h4>Топ категорий</h4>
+<div id="topCategories"></div>
+
+<h4>Топ коллекций</h4>
+<div id="topCollections"></div>
+
+<canvas id="clickChart" width="320" height="160"></canvas>
+
+<div class="container">
+
+  <!-- ADD CATEGORY -->
+  <h3>➕ Категория</h3>
+  <input id="cat_title" placeholder="Название" style="width:100%;padding:10px">
+  <input id="cat_desc" placeholder="Описание" style="width:100%;padding:10px;margin-top:6px">
+  <input id="cat_emoji" placeholder="Эмодзи (👗)" style="width:100%;padding:10px;margin-top:6px">
+  <!-- <button onclick="addCategory()" style="width:100%;padding:12px;margin-top:8px">
+    Добавить категорию
+  </button> -->
+  <button id="saveCategoryBtn"
+        onclick="saveCategory()"
+        style="width:100%;padding:12px;margin-top:8px">
+  Сохранить категорию
+</button>
+
+  <hr style="margin:20px 0">
+
+  <!-- ADD COLLECTION -->
+  <h3>➕ Коллекция</h3>
+  <select id="collectionCategorySelect" style="width:100%;padding:10px"></select>
+  <input id="col_title" placeholder="Название" style="width:100%;padding:10px;margin-top:6px">
+  <input id="col_desc" placeholder="Описание" style="width:100%;padding:10px;margin-top:6px">
+  <input id="col_url" placeholder="Trendyol URL" style="width:100%;padding:10px;margin-top:6px">
+ <button id="saveCollectionBtn"
+        onclick="saveCollection()"
+        style="width:100%;padding:12px;margin-top:8px">
+  Сохранить коллекцию
+</button>
+
+  <hr style="margin:20px 0">
+
+  <!-- CATEGORY LIST -->
+  <h3>📂 Категории</h3>
+  <div id="categoryList"></div>
+
+  <hr style="margin:20px 0">
+
+  <!-- COLLECTION LIST -->
+  <h3>📦 Коллекции</h3>
+  <div id="collectionList"></div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="admin.js"></script>
+
+<script>
+  async function initDashboard() {
+    checkAuth();
+    await loadCategories();        
+    renderCategoryList();         
+    renderCollectionList();        
+    loadStats();                   
+  }
+
+  initDashboard();
+</script>
+
+
+
+</body>
+</html>

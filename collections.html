@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Коллекции</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<div class="header">
+  <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+<div>
+  <h1>Коллекции</h1>
+  <p>Выберите подборку</p>
+</div>
+</div>
+
+<div class="container" id="collections"></div>
+
+<!-- 1️⃣ Supabase SDK (ОБЯЗАТЕЛЬНО) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- 2️⃣ Твой клиент Supabase -->
+<script src="js/supabase.js"></script>
+
+<!-- 3️⃣ Логика страницы -->
+<script>
+  const categoryId = new URLSearchParams(location.search).get("category");
+  const categoryTitle = new URLSearchParams(location.search).get("title");
+
+  document.title = categoryTitle || "Коллекции";
+  document.querySelector("h1").innerText = categoryTitle || "Коллекции";
+
+  if (!categoryId) {
+    document.getElementById("collections").innerText =
+      "Категория не выбрана";
+    throw new Error("category id missing");
+  }
+
+  async function loadCollections() {
+    const { data, error } = await supabase
+      .from("collections")
+      .select("id,title,description")
+      .eq("category_id", categoryId)
+      .order("sort_order");
+
+    if (error) {
+      console.error(error);
+      document.getElementById("collections").innerText =
+        "Ошибка загрузки коллекций";
+      return;
+    }
+
+    const container = document.getElementById("collections");
+    container.innerHTML = "";
+
+    if (!data.length) {
+      container.innerText = "Коллекций пока нет";
+      return;
+    }
+
+    data.forEach(col => {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML = `
+        <div>
+          <h3>${col.title}</h3>
+          <p>${col.description || ""}</p>
+        </div>
+        <span class="arrow">↗</span>
+      `;
+      div.onclick = () => openCollection(col.id);
+      container.appendChild(div);
+    });
+  }
+
+  async function openCollection(id) {
+    const { data, error } = await supabase
+      .from("collections")
+      .select("trendyol_url")
+      .eq("id", id)
+      .single();
+
+    if (error || !data) return;
+    location.href = data.trendyol_url;
+  }
+
+  loadCollections();
+</script>
+
+</body>
+</html>
