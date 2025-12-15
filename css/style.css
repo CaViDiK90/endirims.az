@@ -73,6 +73,7 @@ body {
   cursor: pointer;
   transition: transform 0.1s ease;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: relative;
 }
 
 .card:hover {
@@ -97,7 +98,7 @@ body {
 }
 
 .card p {
-  margin: 4px 0 0;
+  margin: 0;
   font-size: 14px;
   color: #666;
 }
@@ -107,6 +108,13 @@ body {
   color: #000000;
   margin-left: auto;
   flex-shrink: 0;
+}
+
+.card-logo {
+  position: absolute;
+  right: 16px;
+  height: 24px;
+  opacity: 0.25;
 }
 
 /* Мобильные стили */

@@ -36,7 +36,7 @@ let draggedCategoryId = null;
 async function loadCategories() {
   const { data } = await supabase
     .from("categories")
-    .select()
+    .select("id,title,description,emoji,logo")
     .order("sort_order");
 
   const select = document.getElementById("collectionCategorySelect");
@@ -60,7 +60,7 @@ async function loadCategories() {
 async function renderCategoryList() {
   const { data } = await supabase
     .from("categories")
-    .select()
+    .select("id,title,description,emoji,logo")
     .order("sort_order");
 
   const list = document.getElementById("categoryList");
@@ -96,6 +96,7 @@ async function saveCategory() {
   const title = cat_title.value.trim();
   const description = cat_desc.value.trim();
   const emoji = cat_emoji.value.trim();
+  const logo = cat_logo.value.trim();
 
   if (!title || !emoji) {
     alert("Название и эмодзи обязательны");
@@ -106,13 +107,13 @@ async function saveCategory() {
     // UPDATE
     await supabase
       .from("categories")
-      .update({ title, description, emoji })
+      .update({ title, description, emoji, logo })
       .eq("id", editingCategoryId);
   } else {
     // INSERT
     await supabase
       .from("categories")
-      .insert({ title, description, emoji });
+      .insert({ title, description, emoji, logo });
   }
 
   resetCategoryForm();
@@ -124,7 +125,7 @@ async function saveCategory() {
 async function startEditCategory(id) {
   const { data } = await supabase
     .from("categories")
-    .select()
+    .select("id,title,description,emoji,logo")
     .eq("id", id)
     .single();
 
@@ -132,6 +133,7 @@ async function startEditCategory(id) {
   cat_title.value = data.title;
   cat_desc.value = data.description || "";
   cat_emoji.value = data.emoji;
+  cat_logo.value = data.logo || "";
 
   document.getElementById("saveCategoryBtn").innerText = "Обновить категорию";
 }
@@ -149,6 +151,7 @@ function resetCategoryForm() {
   cat_title.value = "";
   cat_desc.value = "";
   cat_emoji.value = "";
+  cat_logo.value = "";
   document.getElementById("saveCategoryBtn").innerText = "Сохранить категорию";
 }
 

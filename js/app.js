@@ -1,7 +1,7 @@
 async function loadCategories() {
   const { data } = await supabase
     .from("categories")
-    .select()
+    .select("id,title,description,emoji,logo")
     .order("created_at");
 
   const container = document.getElementById("categories");
@@ -16,7 +16,7 @@ async function loadCategories() {
         <h3>${cat.title}</h3>
         <p>${cat.description || ""}</p>
       </div>
-      <span class="arrow">›</span>
+      ${cat.logo ? `<img class="card-logo" src="assets/logo/${cat.logo}.svg" alt="Logo">` : ''}
     `;
     div.onclick = () => {
       location.href = `collections.html?category=${cat.id}&title=${encodeURIComponent(cat.title)}`;
